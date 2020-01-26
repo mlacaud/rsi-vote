@@ -16,6 +16,10 @@ tags:
   description: "Voter pour un candidat et voir les résultats"
 schemes:
 - "https"
+securityDefinitions:
+  basicAuth:
+    type: basic
+
 
 definitions:
   Votant:
@@ -126,6 +130,8 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/Votant"
+      security:
+        - basicAuth: []
       responses:
         404:
           description: "Not Found"
@@ -150,6 +156,8 @@ paths:
         type: "string"
         required: true
         description: Nom du votant
+      security:
+        - basicAuth: []
       responses:
         404:
           description: "Not Found"
@@ -293,6 +301,8 @@ paths:
         type: "string"
         required: true
         description: Nom du candidat
+      security:
+        - basicAuth: []
       responses:
         404:
           description: "Candidat Not Found"
