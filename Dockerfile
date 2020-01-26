@@ -5,5 +5,6 @@ COPY package*.json ./
 RUN npm install
 
 COPY index.js ./
+COPY swagger/ ./swagger/
 
 ENTRYPOINT ["node", "index"]
