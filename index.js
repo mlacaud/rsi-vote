@@ -8,6 +8,7 @@ const app = express();
 
 app.use(bodyParser.json({limit: '10mb'}));
 app.use(cors());
+app.use(express.static('swagger'));
 
 let votants = [];
 
@@ -188,7 +189,7 @@ app.delete('/api/candidats/:candidatName',  function (req, res) {
     }
 })
 
-app.get('/api/vote', function(req, res) {
+app.get('/api/votes', function(req, res) {
     let vote = [];
     votes.forEach((elem) => {
         let index = vote.findIndex(elem2 => elem.candidat === elem2.candidat)
@@ -202,7 +203,7 @@ app.get('/api/vote', function(req, res) {
     res.send(vote);
 });
 
-app.post('/api/vote/:candidatName', authVotant, function(req, res) {
+app.post('/api/votes/:candidatName', authVotant, function(req, res) {
     let candidat = candidats.findIndex((elem) => elem.name === req.params.candidatName);
     let vote = votes.findIndex((elem) => elem.votant === req.votant.name);
     if (candidat > -1) {
