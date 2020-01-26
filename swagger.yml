@@ -1,0 +1,303 @@
+swagger: "2.0"
+info:
+  description: "Voivi une API de vote pour les étudiants RSI"
+  version: "1.0.0"
+  title: "Elections RSI"
+  contact:
+    email: "mathias.lacaud@labri.Fr"
+host: "elections.lacaud.fr"
+basePath: "/api"
+tags:
+- name: "Votant"
+  description: "Ajouter, voir ou modifier un votant"
+- name: "Candidat"
+  description: "Ajouter, voir ou modifier un candidat"
+- name: "Vote"
+  description: "Voter pour un candidat et voir les résultats"
+schemes:
+- "https"
+
+definitions:
+  Votant:
+    type: "object"
+    required:
+    - "name"
+    - "password"
+    properties:
+      name:
+        type: "string"
+      password:
+        type: "string"
+  Candidat:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      program:
+        type: "string"
+  Votes:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        candidat:
+          type: "string"
+        votes:
+          type: "number"
+
+paths:
+  /votants:
+    get:
+      tags:
+      - "Votant"
+      summary: "Voir la liste des votants"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items: 
+              $ref: "#/definitions/Votant"
+    post:
+      tags:
+      - "Votant"
+      summary: "Ajouter un nouveau votant"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Un objet votant avec un name et un password"
+        required: true
+        schema:
+          $ref: "#/definitions/Votant"
+      responses:
+        400:
+          description: "Invalid input"
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Votant"
+  /votants/{votantName}:
+    get:
+      tags:
+      - "Votant"
+      summary: "Voir un votant"
+      description: ""
+      parameters:
+        - in: path
+          name: votantName
+          type: "string"
+          required: true
+          description: Nom du votant
+      produces:
+      - "application/json"
+      responses:
+        404:
+          description: "Not Found"
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Votant"
+    put:
+      tags:
+      - "Votant"
+      summary: "Modifier un votant"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: path
+        name: votantName
+        type: "string"
+        required: true
+        description: Nom du votant
+      - in: "body"
+        name: "body"
+        description: "Un objet votant avec un name et/ou un password"
+        required: true
+        schema:
+          $ref: "#/definitions/Votant"
+      responses:
+        404:
+          description: "Not Found"
+        400:
+          description: "Invalid input"
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Votant"
+    delete:
+      tags:
+      - "Votant"
+      summary: "Supprimer un votant"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: path
+        name: votantName
+        type: "string"
+        required: true
+        description: Nom du votant
+      responses:
+        404:
+          description: "Not Found"
+        200:
+          description: "OK"
+  /candidats:
+    get:
+      tags:
+      - "Candidat"
+      summary: "Voir la liste des candidats"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items: 
+              $ref: "#/definitions/Candidat"
+    post:
+      tags:
+      - "Candidat"
+      summary: "Ajouter un nouveau candidat"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Un objet votant avec un name et un program"
+        required: true
+        schema:
+          $ref: "#/definitions/Candidat"
+      responses:
+        400:
+          description: "Invalid input"
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Candidat"
+  /candidats/{candidatName}:
+    get:
+      tags:
+      - "Candidat"
+      summary: "Voir un candidat"
+      description: ""
+      parameters:
+        - in: path
+          name: candidatName
+          type: "string"
+          required: true
+          description: Nom du candidat
+      produces:
+      - "application/json"
+      responses:
+        404:
+          description: "Not Found"
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Candidat"
+    put:
+      tags:
+      - "Candidat"
+      summary: "Modifier un candidat"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: path
+        name: candidatName
+        type: "string"
+        required: true
+        description: Nom du candidat
+      - in: "body"
+        name: "body"
+        description: "Un objet candidat avec un name et/ou un program"
+        required: true
+        schema:
+          $ref: "#/definitions/Votant"
+      responses:
+        404:
+          description: "Not Found"
+        400:
+          description: "Invalid input"
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Votant"
+    delete:
+      tags:
+      - "Candidat"
+      summary: "Supprimer un candidat"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: path
+        name: candidatName
+        type: "string"
+        required: true
+        description: Nom du candidat
+      responses:
+        404:
+          description: "Not Found"
+        200:
+          description: "OK"
+  /api/votes:
+    get:
+      tags:
+      - "Vote"
+      summary: "Voir les votes"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Votes"
+  /api/votes/{candidatName}:
+    post:
+      tags:
+      - "Vote"
+      summary: "Permet de voter pour un candidat ou de modifier son vote"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: path
+        name: candidatName
+        type: "string"
+        required: true
+        description: Nom du candidat
+      responses:
+        404:
+          description: "Candidat Not Found"
+        200:
+          description: "OK"
+          schema:
+            type: "string"
+            example: "A voté"
