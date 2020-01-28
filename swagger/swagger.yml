@@ -4,7 +4,7 @@ info:
   version: "1.0.0"
   title: "Elections RSI"
   contact:
-    email: "mathias.lacaud@labri.Fr"
+    email: "mathias.lacaud@labri.fr"
 host: "elections.lacaud.fr"
 basePath: "/api"
 tags:

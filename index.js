@@ -6,9 +6,16 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./swagger/swagger.yml');
+ 
+
+
 app.use(bodyParser.json({limit: '10mb'}));
 app.use(cors());
 app.use(express.static('swagger'));
+app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 let votants = [];
 
@@ -71,8 +78,12 @@ app.get('/api/votants/:votantName', function (req, res) {
 app.post('/api/votants', function (req, res) {
     if (req.body && req.body.name && req.body.password) {
         let newVotant = req.body;
-        votants.push(newVotant);
-        res.status(200).send(newVotant)
+        if (votants.findIndex(elem => elem.name === newVotant.name) > -1) {
+            res.status(400).send("Un votant avec ce nom existe déjà");
+        } else {
+            votants.push(newVotant);
+            res.status(200).send(newVotant)
+        }
     } else {
         res.status(400).send("Il manque des champs importants, tels que [name, password]")
     }
@@ -138,8 +149,12 @@ app.get('/api/candidats/:candidatName', function (req, res) {
 app.post('/api/candidats', function (req, res) {
     if (req.body && req.body.name && req.body.program) {
         let newCandidat = req.body;
-        candidats.push(newCandidat);
-        res.status(200).send(newCandidat);
+        if (candidats.findIndex(elem => elem.name === newCandidat.name) > -1) {
+            res.status(400).send("Un candidat avec ce nom existe déjà");
+        } else {
+            candidats.push(newCandidat);
+            res.status(200).send(newCandidat);
+        }
     } else {
         res.status(400).send("Il manque des champs importants, tels que [name, program]")
     }
