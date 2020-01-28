@@ -82,7 +82,7 @@ app.post('/api/votants', function (req, res) {
             res.status(400).send("Un votant avec ce nom existe déjà");
         } else {
             votants.push(newVotant);
-            res.status(200).send(newVotant)
+            res.status(201).send(newVotant)
         }
     } else {
         res.status(400).send("Il manque des champs importants, tels que [name, password]")
@@ -95,15 +95,19 @@ app.put('/api/votants/:votantName', authAndVotant, function (req, res) {
         if (votant.length > 0) {
             let modifiedVotantIndex = votants.findIndex((elem) => elem.name === req.params.votantName);
             let modifiedVotant = votants[modifiedVotantIndex];
-            Object.assign(modifiedVotant, req.body);
-            if (modifiedVotant.name !== req.params.votantName) {
-                votes.forEach((elem) => {
-                    if (elem.votant === req.params.votantName) {
-                        elem.votant = modifiedVotant.name;
-                    }
-                })
+            if (req.body && req.body.hasOwnProperty("name") && req.body.name !== req.params.votantName && votants.findIndex((elem) => elem.name === req.body.name) > -1) {
+                res.status(400).send("Un votant avec ce nom existe déjà, mise à jour du votant annulée");
+            } else {
+                Object.assign(modifiedVotant, req.body);
+                if (modifiedVotant.name !== req.params.votantName) {
+                    votes.forEach((elem) => {
+                        if (elem.votant === req.params.votantName) {
+                            elem.votant = modifiedVotant.name;
+                        }
+                    })
+                }
+                res.send(modifiedVotant);
             }
-            res.send(modifiedVotant);
         } else {
             res.sendStatus(404);
         }
@@ -127,7 +131,7 @@ app.delete('/api/votants/:votantName', authAndVotant, function (req, res) {
         }
 
         votants.splice(index, 1);
-        res.sendStatus(201);
+        res.sendStatus(204);
     } else {
         res.sendStatus(404);
     }
@@ -153,7 +157,7 @@ app.post('/api/candidats', function (req, res) {
             res.status(400).send("Un candidat avec ce nom existe déjà");
         } else {
             candidats.push(newCandidat);
-            res.status(200).send(newCandidat);
+            res.status(201).send(newCandidat);
         }
     } else {
         res.status(400).send("Il manque des champs importants, tels que [name, program]")
@@ -166,15 +170,19 @@ app.put('/api/candidats/:candidatName', function (req, res) {
         if (candidat.length > 0) {
             let modifiedCandidatIndex = candidats.findIndex((elem) => elem.name === req.params.candidatName);
             let modifiedCandidat = candidats[modifiedCandidatIndex];
-            Object.assign(modifiedCandidat, req.body);
-            if (modifiedCandidat.name !== req.params.candidatName) {
-                votes.forEach((elem) => {
-                    if (elem.candidat === req.params.candidatName) {
-                        elem.candidat = modifiedCandidat.name;
-                    }
-                })
+            if (req.body && req.body.hasOwnProperty("name") && req.body.name !== req.params.candidatName && candidats.findIndex((elem) => elem.name === req.body.name) > -1) {
+                res.status(400).send("Un candidat avec ce nom existe déjà, mise à jour du candidat annulée");
+            } else {
+                Object.assign(modifiedCandidat, req.body);
+                if (modifiedCandidat.name !== req.params.candidatName) {
+                    votes.forEach((elem) => {
+                        if (elem.candidat === req.params.candidatName) {
+                            elem.candidat = modifiedCandidat.name;
+                        }
+                    })
+                }
+                res.send(modifiedCandidat);
             }
-            res.send(modifiedCandidat);
         } else {
             res.sendStatus(404);
         }
@@ -198,7 +206,7 @@ app.delete('/api/candidats/:candidatName',  function (req, res) {
         }
         
         candidats.splice(index, 1);
-        res.sendStatus(201);
+        res.sendStatus(204);
     } else {
         res.sendStatus(404);
     }

@@ -5,7 +5,7 @@ info:
   title: "Elections RSI"
   contact:
     email: "mathias.lacaud@labri.fr"
-host: "elections.lacaud.fr"
+host: "rsi.lacaud.fr"
 basePath: "/api"
 tags:
 - name: "Votant"
